@@ -1,0 +1,39 @@
+using UnityEngine;
+using UnityEngine.Animations.Rigging;
+
+public class Aiming : MonoBehaviour
+{
+    [SerializeField] private Camera _camera;
+    [SerializeField] private Transform _aimTarget;
+    [SerializeField] private MultiAimConstraint _aimConstraint;
+    [SerializeField] private Animator _animator;
+
+    private void Update()
+    {
+        Fire();
+        Aim();
+    }
+
+    private void Fire()
+    {
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            _animator.SetTrigger("Fire");
+            _aimConstraint.weight = 1;
+        }
+        else
+        {
+            _aimConstraint.weight = 0;
+        }
+    }
+
+    private void Aim()
+    {
+        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        Physics.Raycast(ray, out hit);
+        Vector3 rayPoint = ray.GetPoint(15);
+        _aimTarget.transform.position = new Vector3(rayPoint.x, _camera.transform.position.y, rayPoint.z);
+    }
+}

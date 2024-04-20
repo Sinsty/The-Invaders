@@ -1,34 +1,39 @@
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class CameraRotation : MonoBehaviour
 {
-    [SerializeField] private Camera _camera;
-    [SerializeField] private float _xSens;
-    [SerializeField] private float _ySens;
+    [SerializeField] private Transform _camera;
+    [SerializeField] private float _xSens = 2;
+    [SerializeField] private float _ySens = 2;
+    [SerializeField] private Transform _spine;
 
     private float _xRotation;
-    private float _yRotation;
 
-    private void Start()
+    private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        _xRotation = _camera.transform.localEulerAngles.x;
-        _yRotation = transform.localEulerAngles.y;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        Rotate();
+        Rotating();
     }
 
-    private void Rotate()
+    private void Rotating()
     {
+        float yRotationInput = Input.GetAxis("Mouse X") * _ySens;
+
+        transform.Rotate(Vector3.up * yRotationInput, Space.World);
+
+        float xRotationInput = -Input.GetAxis("Mouse Y") * _xSens;
         _xRotation -= Input.GetAxis("Mouse Y") * _xSens;
-        _yRotation += Input.GetAxis("Mouse X") * _ySens;
+        _xRotation = Mathf.Clamp(_xRotation, -50, 50);
 
-        _xRotation = Mathf.Clamp(_xRotation, -90, 90);
+        float xRotation = _xRotation - xRotationInput;
+        xRotation = Mathf.Clamp(xRotation, -50, 50);
 
-        _camera.transform.localEulerAngles = Vector3.right * _xRotation;
-        transform.localEulerAngles = Vector3.up * _yRotation;
+        _spine.transform.Rotate(transform.right * xRotation + Vector3.up * yRotationInput, Space.World);
+
     }
 }
