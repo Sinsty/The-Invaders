@@ -5,7 +5,6 @@ public class Aiming : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private Transform _aimTarget;
-    [SerializeField] private MultiAimConstraint _aimConstraint;
     [SerializeField] private Animator _animator;
 
     private void Update()
@@ -16,14 +15,13 @@ public class Aiming : MonoBehaviour
 
     private void Fire()
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            _animator.SetTrigger("Fire");
-            _aimConstraint.weight = 1;
+            _animator.SetBool("IsFiring", true);
         }
-        else
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            _aimConstraint.weight = 0;
+            _animator.SetBool("IsFiring", false);
         }
     }
 
