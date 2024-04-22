@@ -1917,11 +1917,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 6
   JumpForce: 5
-  _gorundMask:
+  _groundMask:
     serializedVersion: 2
     m_Bits: 8
-  _playerHeight: 2
-  _checkGorundDistance: 0.01
+  _checkBoxOffset: -0.7
+  _boxHalfSize: {x: 0.2, y: 0.31, z: 0.2}
   _animator: {fileID: 3360260103578099328}
 --- !u!114 &2551894521444814099
 MonoBehaviour:
@@ -3705,7 +3705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5658755173312247227, guid: 0e3eb2d9cedf476499f98d73face6256, type: 3}
       propertyPath: m_Name
-      value: Handkonsole011
+      value: ArmConsole
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

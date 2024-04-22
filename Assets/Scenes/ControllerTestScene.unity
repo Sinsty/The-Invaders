@@ -281,6 +281,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: _playerHeight
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: _boxHalfSize.y
+      value: 0.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: _groundMask.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: _checkGorundDistance
+      value: 0.07
+      objectReference: {fileID: 0}
     - target: {fileID: 8523584587998728578, guid: d08d422f435343547803f5eb58fda311, type: 3}
       propertyPath: m_Name
       value: ArmConsole

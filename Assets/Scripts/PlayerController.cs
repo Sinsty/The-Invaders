@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
     public float Speed;
     public float JumpForce;
     [Header("Ground Check")]
-    [SerializeField] private LayerMask _gorundMask;
-    [SerializeField] private float _playerHeight = 2;
-    [SerializeField] private float _checkGorundDistance = 0.01f;
+    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private float _checkBoxOffset = -0.7f;
+    [SerializeField] private Vector3 _boxHalfSize = new Vector3(0.2f, 0.35f, 0.2f);
     [Header("Animations")]
     [SerializeField] private Animator _animator;
 
@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        Vector3 position = new Vector3(transform.position.x, transform.position.y - _playerHeight / 2, transform.position.z);
-        bool result = Physics.CheckSphere(position, _checkGorundDistance, _gorundMask);
+        Vector3 position = new Vector3(transform.position.x, transform.position.y + _checkBoxOffset, transform.position.z);
+        bool result = Physics.CheckBox(position, _boxHalfSize, Quaternion.identity, _groundMask);
         return result;
     }
 
@@ -62,6 +62,14 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger("Jump");
             _rb.velocity = new Vector3(_rb.velocity.x, JumpForce, _rb.velocity.z);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        Vector3 position = new Vector3(transform.position.x, transform.position.y + _checkBoxOffset, transform.position.z);
+        Gizmos.DrawCube(position, _boxHalfSize * 2);
     }
 
     private void Animate()
