@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &556842951 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1769217092953958271, guid: d08d422f435343547803f5eb58fda311, type: 3}
+  m_PrefabInstance: {fileID: 941627466}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &789293803
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,6 +242,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1607597283021235496, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: m_Data.m_Root
+      value: 
+      objectReference: {fileID: 556842951}
     - target: {fileID: 2221623140444024326, guid: d08d422f435343547803f5eb58fda311, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -277,29 +286,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5481553701382086825, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: m_Data.m_Root
+      value: 
+      objectReference: {fileID: 556842951}
     - target: {fileID: 5604322965388145080, guid: d08d422f435343547803f5eb58fda311, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: _playerHeight
-      value: 1.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: _boxHalfSize.y
-      value: 0.31
-      objectReference: {fileID: 0}
-    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: _groundMask.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5651328195536499396, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: _checkGorundDistance
-      value: 0.07
-      objectReference: {fileID: 0}
-    - target: {fileID: 8523584587998728578, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: m_Name
-      value: ArmConsole
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
