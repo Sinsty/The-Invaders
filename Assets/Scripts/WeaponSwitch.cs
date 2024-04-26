@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class WeaponSwitch : MonoBehaviour
 {
-    enum StartWeapon
+    enum Weapon
     {
-        rifle,
+        rifle = 1,
         pistol,
         map
     }
 
-    [SerializeField] private StartWeapon _startWeapon;
+    [SerializeField] private Weapon _weapon;
     [SerializeField] private GameObject _rifle;
     [SerializeField] private GameObject _pistol;
     [SerializeField] private GameObject _map;
@@ -17,39 +17,49 @@ public class WeaponSwitch : MonoBehaviour
 
     private void Start()
     {
-        switch (_startWeapon) 
-        {
-            case StartWeapon.rifle:
-                TakeRifle();
-                break;
-
-            case StartWeapon.pistol:
-                TakePistol();
-                break;
-            case StartWeapon.map:
-                TakeMap();
-                break;
-        }
+        GunUpdate();
     }
 
     private void Update()
     {
-        Switch();
+        SwitchAnimations();
     }
 
-    private void Switch()
+    private void SwitchAnimations()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            TakeRifle();
+            _animator.SetInteger("GunNumber", 1);
+            _weapon = Weapon.rifle;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            TakePistol();
+            _animator.SetInteger("GunNumber", 2);
+            _weapon = Weapon.pistol;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            TakeMap();
+            _animator.SetInteger("GunNumber", 3);
+            _weapon = Weapon.map;
+        }
+    }
+
+    public void GunUpdate()
+    {
+        switch (_weapon)
+        {
+            case Weapon.rifle:
+                _animator.SetInteger("GunNumber", 1);
+                TakeRifle();
+                break;
+            case Weapon.pistol:
+                _animator.SetInteger("GunNumber", 2);
+                TakePistol();
+                break;
+            case Weapon.map:
+                _animator.SetInteger("GunNumber", 3);
+                TakeMap();
+                break;
         }
     }
 
@@ -58,7 +68,6 @@ public class WeaponSwitch : MonoBehaviour
         _rifle.SetActive(true);
         _pistol.SetActive(false);
         _map.SetActive(false);
-        _animator.SetTrigger("TakeRifle");
     }
 
     private void TakePistol()
@@ -66,7 +75,6 @@ public class WeaponSwitch : MonoBehaviour
         _rifle.SetActive(false);
         _pistol.SetActive(true);
         _map.SetActive(false);
-        _animator.SetTrigger("TakePistol");
     }
 
     private void TakeMap()
@@ -74,6 +82,5 @@ public class WeaponSwitch : MonoBehaviour
         _rifle.SetActive(false);
         _pistol.SetActive(false);
         _map.SetActive(true);
-        _animator.SetTrigger("TakeMap");
     }
 }
