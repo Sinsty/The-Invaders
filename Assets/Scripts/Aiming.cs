@@ -15,11 +15,11 @@ public class Aiming : MonoBehaviour
 
     private void Fire()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1))
         {
             _animator.SetBool("IsFiring", true);
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0))
+        else if (Input.GetKeyUp(KeyCode.Mouse0) || Input.GetKeyUp(KeyCode.Mouse1))
         {
             _animator.SetBool("IsFiring", false);
         }

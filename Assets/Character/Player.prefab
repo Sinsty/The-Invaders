@@ -1950,7 +1950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea49454fb89b2ec48ab9b1933c91630f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startWeapon: 2
+  _weapon: 0
   _rifle: {fileID: 3333060543354207799}
   _pistol: {fileID: 1010051373296792008}
   _map: {fileID: 5902860462913940174}
