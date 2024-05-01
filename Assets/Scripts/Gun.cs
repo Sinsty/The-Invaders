@@ -50,5 +50,11 @@ public class Gun : MonoBehaviour
     {
         Instantiate(_impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
         Debug.Log("Hitted object in: " + hit.point);
+
+        EnemyHealth enemyHealth = hit.collider.gameObject.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            enemyHealth.DealDamage(Damage);
+        }
     }
 }

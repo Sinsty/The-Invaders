@@ -2,14 +2,7 @@ using UnityEngine;
 
 public class WeaponSwitch : MonoBehaviour
 {
-    enum Weapon
-    {
-        rifle = 1,
-        pistol,
-        map
-    }
-
-    [SerializeField] private Weapon _weapon;
+    [SerializeField] private int _startGunNumber = 1;
     [SerializeField] private GameObject _rifle;
     [SerializeField] private GameObject _pistol;
     [SerializeField] private GameObject _map;
@@ -17,12 +10,16 @@ public class WeaponSwitch : MonoBehaviour
 
     private void Start()
     {
+        _animator.SetInteger("GunNumber", _startGunNumber);
         GunUpdate();
     }
 
     private void Update()
     {
-        SwitchAnimations();
+        if (_animator.GetCurrentAnimatorStateInfo(1).IsName("Check") == false)
+        {
+            SwitchAnimations();
+        }
     }
 
     private void SwitchAnimations()
@@ -30,34 +27,29 @@ public class WeaponSwitch : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _animator.SetInteger("GunNumber", 1);
-            _weapon = Weapon.rifle;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             _animator.SetInteger("GunNumber", 2);
-            _weapon = Weapon.pistol;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             _animator.SetInteger("GunNumber", 3);
-            _weapon = Weapon.map;
         }
     }
 
     public void GunUpdate()
     {
-        switch (_weapon)
+        int gunNumber = _animator.GetInteger("GunNumber");
+        switch (gunNumber)
         {
-            case Weapon.rifle:
-                _animator.SetInteger("GunNumber", 1);
+            case 1:
                 TakeRifle();
                 break;
-            case Weapon.pistol:
-                _animator.SetInteger("GunNumber", 2);
+            case 2:
                 TakePistol();
                 break;
-            case Weapon.map:
-                _animator.SetInteger("GunNumber", 3);
+            case 3:
                 TakeMap();
                 break;
         }
