@@ -31,6 +31,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _chahsingSpeed = 7;
     [SerializeField] private float _patrolSpeed = 5;
     [Header("Shooting settings")]
+    [SerializeField] private ParticleSystem _muzzleFlash;
     [SerializeField] private float _rotatingToTargetSpeed = 1;
     [SerializeField] private float _fireRate = 1;
     [SerializeField] private float _damage = 5;
@@ -125,6 +126,7 @@ public class EnemyAI : MonoBehaviour
         if (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
         {
             _animator.SetTrigger("Take a knee");
+            RotateToTarget(_holdingPoint.position + _holdingPoint.forward);
         }
     }
 
@@ -143,10 +145,17 @@ public class EnemyAI : MonoBehaviour
 
     private void Shoot()
     {
-        if (Time.time >= _nextTimeToFire && UnityEngine.Random.Range(0, (int)(1 /_hitChanse)) == 0)
+
+        if (Time.time >= _nextTimeToFire)
         {
+            _muzzleFlash.Play();
+
+            if (UnityEngine.Random.Range(0, (int)(1 / _hitChanse)) == 0)
+            {
+                _player.DealDamage(_damage);
+            }
+
             _nextTimeToFire = Time.time + 1f / _fireRate;
-            _player.DealDamage(_damage);
         }
     }
 
