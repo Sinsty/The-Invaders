@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Gun : MonoBehaviour
 {
-    public static UnityEvent OnShoot = new UnityEvent();
+    public static UnityEvent<Vector3> OnHit = new UnityEvent<Vector3>();
 
     public float Damage;
     public float MaxDistance;
@@ -45,12 +45,12 @@ public class Gun : MonoBehaviour
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         if (Physics.Raycast(ray, out hit, MaxDistance))
         {
-            OnHit(hit);
-            OnShoot.Invoke();
+            Hitting(hit);
+            OnHit.Invoke(hit.point);
         }
     }
 
-    private void OnHit(RaycastHit hit)
+    private void Hitting(RaycastHit hit)
     {
         Instantiate(_impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
 

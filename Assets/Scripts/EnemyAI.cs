@@ -8,11 +8,11 @@ public class EnemyAI : MonoBehaviour
 {
     public enum EnemyStates
     {
-        patroling,
-        holding,
-        shooting,
-        chasing,
-        researching,
+        patroling = 1,
+        holding = 2,
+        shooting = 3,
+        chasing = 4,
+        researching = 5,
     }
 
     public EnemyStates State { get; private set; }
@@ -28,6 +28,8 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _enemyTriggerRadius = 25;
     [Header("State settings")]
     [SerializeField] private float _viewAngle = 90;
+    [SerializeField] private float _multiplySearchSensWhileHolding = 1f;
+    [SerializeField] private float _multiplySearchSensWhileResearching = 1f;
     [SerializeField] private float _holdingTime = 10;
     [SerializeField] private float _chahsingSpeed = 7;
     [SerializeField] private float _patrolSpeed = 5;
@@ -52,7 +54,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnEnable()
     {
-        Gun.OnShoot.AddListener(HeardShots);
+        Gun.OnHit.AddListener(HeardShots);
     }
 
     private void FixedUpdate()
@@ -60,44 +62,59 @@ public class EnemyAI : MonoBehaviour
         SwitchStatesUpdate();
     }
 
-    private void HeardShots()
+    private void HeardShots(Vector3 hotPoint)
     {
-        float distance = Vector3.Distance(transform.position, _player.transform.position);
-        if (distance < _maxShootTriggerDistance)
+        float maxHearDistance = _maxShootTriggerDistance;
+
+        if (State == EnemyStates.holding)
+            maxHearDistance *= _multiplySearchSensWhileHolding;
+        else if (State == EnemyStates.researching)
+            maxHearDistance *= _multiplySearchSensWhileResearching;
+
+        float distance = Vector3.Distance(transform.position, hotPoint);
+
+        if (distance < maxHearDistance)
         {
             print("HeardShots");
-            if (State != EnemyStates.holding)
+            if (State != EnemyStates.holding && State != EnemyStates.researching)
             {
-                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding);
+                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, true, 0.9f);
             }
         }
     }
 
     private void SwitchStatesUpdate()
     {
-        if (IsCanShooting()) // if player was noticed all enemyes will hold positions
+        if (State != EnemyStates.researching)
         {
-            SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding);
+            if (IsCanShooting()) // if player was noticed all enemyes will hold positions
+            {
+                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, 1);
 
-            State = EnemyStates.shooting;
-        }
-        else if (State == EnemyStates.shooting && IsCanShooting() == false && IsCanChasing())  // if enemy was shooting and then he lost sight of player he start chasing player
-        {
-            State = EnemyStates.chasing;
-        }
-        else if (State != EnemyStates.researching && State == EnemyStates.holding && _timer >= _holdingTime) // if enemy holding enought time he start patroling
-        {
-            _timer = 0;
-            State = EnemyStates.patroling;
-        }
-        else if (State != EnemyStates.researching && IsCanShooting() == false && IsCanChasing() == false && State != EnemyStates.holding)
-        {
-            State = EnemyStates.patroling;
-        }
+                State = EnemyStates.shooting;
+            }
+            else if (State == EnemyStates.shooting && IsCanShooting() == false && IsCanChasing())  // if enemy was shooting and then he lost sight of player he start chasing player
+            {
+                State = EnemyStates.chasing;
+            }
+            else if (State == EnemyStates.holding && _timer >= _holdingTime) // if enemy holding enought time he start patroling
+            {
+                State = EnemyStates.patroling;
+            }
+            else if (IsCanShooting() == false && IsCanChasing() == false && State != EnemyStates.holding)
+            {
+                State = EnemyStates.patroling;
+            }
 
-        if (State != EnemyStates.holding)
-        {
-            _timer += Time.fixedDeltaTime;
+            if (State == EnemyStates.holding)
+            {
+                _timer += Time.fixedDeltaTime;
+            }
+            else
+            {
+                _timer = 0;
+                _animator.ResetTrigger("Take a knee");
+            }
         }
 
         if (State == EnemyStates.researching && (IsCanChasing() || IsCanShooting() || _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance))
@@ -134,7 +151,7 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case EnemyStates.shooting:
-               //Debug.Log("Shooting");
+                //Debug.Log("Shooting");
                 ShootUpdate();
                 break;
 
@@ -162,6 +179,7 @@ public class EnemyAI : MonoBehaviour
 
         _navMeshAgent.speed = velocity;
         _navMeshAgent.SetDestination(_player.transform.position);
+        print("Researching " + _navMeshAgent.destination);
     }
 
     public void StartResearch(Vector3 point, bool IsRunWhenResearching)
@@ -216,7 +234,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Shoot()
     {
-
+        print("EnemyShoot");
         if (Time.time >= _nextTimeToFire)
         {
             _muzzleFlash.Play();
@@ -240,12 +258,22 @@ public class EnemyAI : MonoBehaviour
 
     private bool IsCanChasing()
     {
-        return IsCanSeePlayer(_viewAngle, _maxChasingDistance);
+        if (State == EnemyStates.holding)
+            return IsCanSeePlayer(_viewAngle, _maxChasingDistance * _multiplySearchSensWhileHolding);
+        else if (State == EnemyStates.researching)
+            return IsCanSeePlayer(_viewAngle, _maxChasingDistance * _multiplySearchSensWhileResearching);
+        else
+            return IsCanSeePlayer(_viewAngle, _maxChasingDistance);
     }
 
     private bool IsCanShooting()
     {
-        return IsCanSeePlayer(_viewAngle, _maxShootingDistance);
+        if (State == EnemyStates.holding)
+            return IsCanSeePlayer(_viewAngle, _maxShootingDistance * _multiplySearchSensWhileHolding);
+        else if (State == EnemyStates.researching)
+            return IsCanSeePlayer(_viewAngle, _maxShootingDistance * _multiplySearchSensWhileResearching);
+        else
+            return IsCanSeePlayer(_viewAngle, _maxShootingDistance);
     }
 
     private bool IsCanSeePlayer(float viewAngle, float maxDistanceToSee)
@@ -280,7 +308,9 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void SwitchStateAllEnemyInRadius(float radius, EnemyStates newState)
+    #region SwitchStateAllEnemyInRadius
+
+    private void SwitchStateAllEnemyInRadius(float radius, EnemyStates newState, float chance)
     {
         var objects = Physics.SphereCastAll(transform.position, radius, Vector3.up);
 
@@ -289,11 +319,60 @@ public class EnemyAI : MonoBehaviour
             EnemyAI enemyAI;
             if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
             {
-                if (enemyAI.State == EnemyStates.patroling)
+                if (enemyAI.State != newState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                {
                     enemyAI.State = newState;
+                    enemyAI.SwitchStatesUpdate();
+                }
             }
         }
     }
+
+    private void SwitchStateAllEnemyInRadius(float radius, EnemyStates firstState, EnemyStates secondState, float chance)
+    {
+        var objects = Physics.SphereCastAll(transform.position, radius, Vector3.up);
+
+        foreach (var obj in objects)
+        {
+            EnemyAI enemyAI;
+            if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
+            {
+                if (enemyAI.State != firstState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                {
+                    enemyAI.State = firstState;
+                }
+                else
+                {
+                    enemyAI.State = secondState;
+                }
+                enemyAI.SwitchStatesUpdate();
+            }
+        }
+    }
+
+    private void SwitchStateAllEnemyInRadius(float radius, EnemyStates firstState, bool secondResearch, float chance)
+    {
+        var objects = Physics.SphereCastAll(transform.position, radius, Vector3.up);
+
+        foreach (var obj in objects)
+        {
+            EnemyAI enemyAI;
+            if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
+            {
+                if (enemyAI.State != firstState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                {
+                    enemyAI.State = firstState;
+                }
+                else if (secondResearch)
+                {
+                    enemyAI.StartResearch(true);
+                }
+                enemyAI.SwitchStatesUpdate();
+            }
+        }
+    }
+
+    #endregion SwitchStateAllEnemyInRadius
 
     private void RotateToTarget(Vector3 target)
     {
@@ -304,7 +383,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnDisable()
     {
-
+        Gun.OnHit.RemoveListener(HeardShots);
     }
 
 }
