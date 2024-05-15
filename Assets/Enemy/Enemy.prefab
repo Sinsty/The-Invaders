@@ -1289,10 +1289,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _maxShootTriggerDistance: 100
-  _maxShootingDistance: 10
-  _maxChasingDistance: 20
-  _enemyTriggerRadius: 25
-  _viewAngle: 90
+  _maxShootingDistance: 30
+  _maxChasingDistance: 30
+  _enemyTriggerRadius: 30
+  _viewAngle: 120
   _holdingTime: 10
   _chahsingSpeed: 6
   _patrolSpeed: 3
