@@ -19,7 +19,7 @@ public class Aiming : MonoBehaviour
         {
             _animator.SetBool("IsFiring", true);
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0) || Input.GetKeyUp(KeyCode.Mouse1))
+        else if (Input.GetKey(KeyCode.Mouse0) == false && Input.GetKey(KeyCode.Mouse1) == false)
         {
             _animator.SetBool("IsFiring", false);
         }

@@ -1281,7 +1281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1e529963d309142b70aae7b3f2c246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  State: 0
   _player: {fileID: 0}
   _holdingPoint: {fileID: 0}
   _patrolPoints:
@@ -1289,6 +1288,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _maxShootTriggerDistance: 100
   _maxShootingDistance: 10
   _maxChasingDistance: 20
   _enemyTriggerRadius: 25
@@ -1298,7 +1298,7 @@ MonoBehaviour:
   _patrolSpeed: 3
   _muzzleFlash: {fileID: 5680886012220675531}
   _rotatingToTargetSpeed: 1
-  _fireRate: 1
+  _fireRate: 5
   _damage: 5
   _hitChanse: 0
   _animator: {fileID: 3197444916994003068}
@@ -1315,6 +1315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 100
+  _enemyAI: {fileID: 5071120785793730918}
 --- !u!1 &4327961910585390947
 GameObject:
   m_ObjectHideFlags: 0

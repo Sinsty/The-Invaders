@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField]private float _health = 100;
+    [SerializeField] private float _health = 100;
+    [SerializeField] private EnemyAI _enemyAI;
 
     public void DealDamage(float damage)
     {
-        Debug.Log("Ouch");
+        _enemyAI.StartResearch(true);
         _health -= damage;
         if (_health <= 0)
         {

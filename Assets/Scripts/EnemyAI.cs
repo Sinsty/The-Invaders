@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,15 +12,17 @@ public class EnemyAI : MonoBehaviour
         holding,
         shooting,
         chasing,
+        researching,
     }
 
-    public EnemyStates State;
+    public EnemyStates State { get; private set; }
 
     [Header("Targets")]
     [SerializeField] private PlayerHealth _player;
     [SerializeField] private Transform _holdingPoint;
     [SerializeField] private Transform[] _patrolPoints;
     [Header("Distances")]
+    [SerializeField] private float _maxShootTriggerDistance = 50;
     [SerializeField] private float _maxShootingDistance = 10;
     [SerializeField] private float _maxChasingDistance = 20;
     [SerializeField] private float _enemyTriggerRadius = 25;
@@ -49,9 +50,27 @@ public class EnemyAI : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
+    private void OnEnable()
+    {
+        Gun.OnShoot.AddListener(HeardShots);
+    }
+
     private void FixedUpdate()
     {
         SwitchStatesUpdate();
+    }
+
+    private void HeardShots()
+    {
+        float distance = Vector3.Distance(transform.position, _player.transform.position);
+        if (distance < _maxShootTriggerDistance)
+        {
+            print("HeardShots");
+            if (State != EnemyStates.holding)
+            {
+                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding);
+            }
+        }
     }
 
     private void SwitchStatesUpdate()
@@ -66,19 +85,35 @@ public class EnemyAI : MonoBehaviour
         {
             State = EnemyStates.chasing;
         }
-        else if (State == EnemyStates.holding && _timer >= _holdingTime) // if enemy holding enought time he start patroling
+        else if (State != EnemyStates.researching && State == EnemyStates.holding && _timer >= _holdingTime) // if enemy holding enought time he start patroling
         {
             _timer = 0;
             State = EnemyStates.patroling;
         }
-        else if (IsCanShooting() == false && IsCanChasing() == false && State != EnemyStates.holding)
+        else if (State != EnemyStates.researching && IsCanShooting() == false && IsCanChasing() == false && State != EnemyStates.holding)
         {
             State = EnemyStates.patroling;
         }
 
-        if (State == EnemyStates.holding)
+        if (State != EnemyStates.holding)
         {
             _timer += Time.fixedDeltaTime;
+        }
+
+        if (State == EnemyStates.researching && (IsCanChasing() || IsCanShooting() || _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance))
+        {
+            if (IsCanChasing())
+            {
+                State = EnemyStates.chasing;
+            }
+            else if (IsCanShooting())
+            {
+                State = EnemyStates.shooting;
+            }
+            else
+            {
+                State = EnemyStates.patroling;
+            }
         }
 
         UpdateState();
@@ -89,22 +124,22 @@ public class EnemyAI : MonoBehaviour
         switch (State)
         {
             case EnemyStates.patroling:
-                Debug.Log("Patroling");
+                //Debug.Log("Patroling");
                 PatrolUpdate();
                 break;
 
             case EnemyStates.holding:
-                Debug.Log("Holding");
+                //Debug.Log("Holding");
                 HoldUpdate();
                 break;
 
             case EnemyStates.shooting:
-                Debug.Log("Shooting");
+               //Debug.Log("Shooting");
                 ShootUpdate();
                 break;
 
             case EnemyStates.chasing:
-                Debug.Log("Chasing");
+                //Debug.Log("Chasing");
                 ChaseUpdate();
                 break;
         }
@@ -112,6 +147,40 @@ public class EnemyAI : MonoBehaviour
         _animator.SetInteger("State", (int)State);
         _animator.SetFloat("Speed", _navMeshAgent.velocity.magnitude);
     }
+
+    #region Research
+
+    public void StartResearch(bool IsRunWhenResearching)
+    {
+        State = EnemyStates.researching;
+
+        float velocity = _patrolSpeed;
+        if (IsRunWhenResearching)
+        {
+            velocity = _chahsingSpeed;
+        }
+
+        _navMeshAgent.speed = velocity;
+        _navMeshAgent.SetDestination(_player.transform.position);
+    }
+
+    public void StartResearch(Vector3 point, bool IsRunWhenResearching)
+    {
+        State = EnemyStates.researching;
+
+        float velocity = _patrolSpeed;
+        if (IsRunWhenResearching)
+        {
+            velocity = _chahsingSpeed;
+        }
+
+        _navMeshAgent.speed = velocity;
+        _navMeshAgent.SetDestination(point);
+    }
+
+    #endregion Research
+
+    #region StateUpdates
 
     private void PatrolUpdate()
     {
@@ -140,8 +209,10 @@ public class EnemyAI : MonoBehaviour
     private void ChaseUpdate()
     {
         _navMeshAgent.speed = _chahsingSpeed;
-        GoToPoint(_player.transform.position);
+        _navMeshAgent.SetDestination(_player.transform.position);
     }
+
+    #endregion StateUpdates
 
     private void Shoot()
     {
@@ -230,4 +301,10 @@ public class EnemyAI : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotatingToTargetSpeed);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
+
+    private void OnDisable()
+    {
+
+    }
+
 }

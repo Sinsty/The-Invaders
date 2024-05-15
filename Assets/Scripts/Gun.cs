@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]
 
 public class Gun : MonoBehaviour
 {
+    public static UnityEvent OnShoot = new UnityEvent();
+
     public float Damage;
     public float MaxDistance;
     public float FireRate;
@@ -43,13 +46,13 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(ray, out hit, MaxDistance))
         {
             OnHit(hit);
+            OnShoot.Invoke();
         }
     }
 
     private void OnHit(RaycastHit hit)
     {
         Instantiate(_impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-        Debug.Log("Hitted object in: " + hit.point);
 
         EnemyHealth enemyHealth = hit.collider.gameObject.GetComponent<EnemyHealth>();
         if (enemyHealth != null)

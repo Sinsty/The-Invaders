@@ -11,6 +11,7 @@ public class CameraRotation : MonoBehaviour
 
     private float _neededXRotationInput;
     private float _xRotation;
+    private float _yRotation;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class CameraRotation : MonoBehaviour
     private void Rotating()
     {
         float yRotationInput = Input.GetAxis("Mouse X") * _ySens;
+        _yRotation += yRotationInput;
 
         transform.Rotate(Vector3.up * yRotationInput, Space.World);
 
@@ -44,7 +46,8 @@ public class CameraRotation : MonoBehaviour
     {
 
         float StabilizedXRotation = Mathf.LerpAngle(_cameraHolder.transform.eulerAngles.x, _xRotation, _stabilizationForce);
+        float StabilizedYRotation = Mathf.LerpAngle(_cameraHolder.transform.eulerAngles.y, _yRotation, _stabilizationForce);
         float StabilizedZRotation = Mathf.LerpAngle(_cameraHolder.transform.eulerAngles.z, 0, _stabilizationForce);
-        _cameraHolder.transform.eulerAngles = new Vector3(StabilizedXRotation, _cameraHolder.transform.eulerAngles.y, StabilizedZRotation);
+        _cameraHolder.transform.eulerAngles = new Vector3(StabilizedXRotation, StabilizedYRotation, StabilizedZRotation);
     }
 }

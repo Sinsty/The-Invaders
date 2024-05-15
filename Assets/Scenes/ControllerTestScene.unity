@@ -1466,6 +1466,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2040337652}
     - target: {fileID: 5071120785793730918, guid: 7c0340d77fdf82e41a41ac843d048f21, type: 3}
+      propertyPath: _maxShootTriggerDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071120785793730918, guid: 7c0340d77fdf82e41a41ac843d048f21, type: 3}
       propertyPath: _patrolPoints.Array.data[0]
       value: 
       objectReference: {fileID: 924480898}
@@ -1813,10 +1817,6 @@ PrefabInstance:
       propertyPath: _player
       value: 
       objectReference: {fileID: 344348288}
-    - target: {fileID: 5071120785793730918, guid: 7c0340d77fdf82e41a41ac843d048f21, type: 3}
-      propertyPath: _fireRate
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 5071120785793730918, guid: 7c0340d77fdf82e41a41ac843d048f21, type: 3}
       propertyPath: _holdingPoint
       value: 
