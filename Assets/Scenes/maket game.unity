@@ -4598,22 +4598,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 222713015955528146, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 222713015955528146, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 557365449027755910, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1694428708944124472, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: MaxDistance
-      value: 75
-      objectReference: {fileID: 0}
     - target: {fileID: 2221623140444024326, guid: d08d422f435343547803f5eb58fda311, type: 3}
       propertyPath: m_LocalPosition.x
       value: 534.5
@@ -4654,21 +4638,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2263191051822095504, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: MaxDistance
-      value: 75
-      objectReference: {fileID: 0}
     - target: {fileID: 5604322965388145080, guid: d08d422f435343547803f5eb58fda311, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 5956382523131819078, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: m_Type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5956382523131819078, guid: d08d422f435343547803f5eb58fda311, type: 3}
-      propertyPath: m_FillAmount
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

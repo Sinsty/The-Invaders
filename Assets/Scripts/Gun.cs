@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
 
@@ -11,14 +12,35 @@ public class Gun : MonoBehaviour
     public float MaxDistance;
     public float FireRate;
 
-    [SerializeField] string _aimAnimationTag = "Aim";
     [SerializeField] private Camera _camera;
+    [Header("Visuals")]
+    [SerializeField] string _aimAnimationTag = "Aim";
     [SerializeField] private ParticleSystem _muzzleFlashEffect;
     [SerializeField] private ParticleSystem _impactEffect;
-    [SerializeField] private AudioClip _shotAudio;
     [SerializeField] private Animator _animator;
+    [Header("Sounds")]
+    [SerializeField] private AudioClip _shotAudio;
+    [Header("OverHeat")]
+    [SerializeField] private Image _overheatBar;
+    [SerializeField] private GameObject _overheatWarningText;
+    [SerializeField] private float _overheatIncreaseSpeed = 0.07f;
+    [SerializeField] private float _overheatDecreaseSpeed = 0.7f;
+    [SerializeField] private float _coolingDownSpeed = 0.3f;
+
+    private bool _isCoolingDown = false;
+
+    private float _overheatLevel;
+
+    private float _disableTime;
+
+    public float OverheatLevel
+    {
+        get { return _overheatLevel; }
+        set { _overheatLevel = Mathf.Clamp(value, 0, 1); }
+    }
 
     private float _nextTimeToFire;
+
     private AudioSource _audioSource;
 
     private void Awake()
@@ -26,20 +48,54 @@ public class Gun : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
+    private void OnEnable()
+    {
+        UpdateOverheatOnEnable();
+    }
+
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= _nextTimeToFire && _animator.GetCurrentAnimatorStateInfo(1).IsTag(_aimAnimationTag))
+        ShootUpdate();
+        UpdateOverheatBar();
+    }
+
+    private void ShootUpdate()
+    {
+        if (OverheatLevel >= 1)
         {
-            _nextTimeToFire = Time.time + 1f / FireRate;
-            Shoot();
+            _isCoolingDown = true;
+            _overheatWarningText.SetActive(true);
+        }
+        else if (OverheatLevel <= 0)
+        {
+            _isCoolingDown = false;
+            _overheatWarningText.SetActive(false);
         }
 
+        if (_isCoolingDown == false)
+        {
+            if (Input.GetKey(KeyCode.Mouse0) && OverheatLevel < 1 && Time.time >= _nextTimeToFire && _animator.GetCurrentAnimatorStateInfo(1).IsTag(_aimAnimationTag))
+            {
+                _nextTimeToFire = Time.time + 1f / FireRate;
+                Shoot();
+            }
+            else if (Input.GetKey(KeyCode.Mouse0) == false)
+            {
+                print("decrease");
+                OverheatLevel -= _overheatDecreaseSpeed * Time.deltaTime;
+            }
+        }
+        else
+        {
+            OverheatLevel -= _coolingDownSpeed * Time.deltaTime;
+        }
     }
 
     private void Shoot()
     {
         _muzzleFlashEffect.Play();
         _audioSource.PlayOneShot(_shotAudio);
+        OverheatLevel += _overheatIncreaseSpeed;
 
         RaycastHit hit;
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
@@ -59,5 +115,36 @@ public class Gun : MonoBehaviour
         {
             enemyHealth.DealDamage(Damage);
         }
+    }
+
+    private void UpdateOverheatBar()
+    {
+        _overheatBar.fillAmount = Mathf.Lerp(_overheatBar.fillAmount, OverheatLevel, Time.deltaTime * 5);
+    }
+
+    private void UpdateOverheatOnEnable()
+    {
+        if (_isCoolingDown)
+        {
+            _overheatWarningText.SetActive(true);
+        }
+        else
+        {
+            _overheatWarningText.SetActive(false);
+        }
+
+        float decreaseValue = 0;
+        if (_isCoolingDown)
+            decreaseValue = (Time.time - _disableTime) * _coolingDownSpeed;
+        else
+            decreaseValue = (Time.time - _disableTime) * _overheatDecreaseSpeed;
+
+        OverheatLevel -= decreaseValue;
+        _overheatBar.fillAmount = OverheatLevel;
+    }
+
+    private void OnDisable()
+    {
+        _disableTime = Time.time;
     }
 }
