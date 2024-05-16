@@ -86,7 +86,7 @@ public class EnemyAI : MonoBehaviour
             {
                 if (State != EnemyStates.shooting)
                 {
-                    //SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, 1);
+                    SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, 1);
                 }
 
                 State = EnemyStates.shooting;
