@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -12,6 +13,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 _boxHalfSize = new Vector3(0.2f, 0.35f, 0.2f);
     [Header("Animations")]
     [SerializeField] private Animator _animator;
+    [Header("Sounds")]
+    [SerializeField] private AudioSource _audioSource;
+    [Header("FootSteps")]
+    [SerializeField] private float _stepsDelay = 0.25f;
+    [SerializeField] private AudioClip[] _standartFootsteps;
+    [SerializeField] private string _metalTag;
+    [SerializeField] private AudioClip[] _metalFootsteps;
+
+    private bool _isStepReload = true;
+    private WaitForSeconds _cachedStepsDelay;
 
     private float _verticalInput;
     private float _horizontalInput;
@@ -21,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _cachedStepsDelay = new WaitForSeconds(_stepsDelay);
     }
 
     private void Update()
@@ -28,6 +40,7 @@ public class PlayerController : MonoBehaviour
         Inputs();
         Jump();
         Animate();
+        if (_isStepReload && IsGrounded()) StartCoroutine(FootstepsUpdate());
     }
 
     private void FixedUpdate()
@@ -79,5 +92,29 @@ public class PlayerController : MonoBehaviour
 
         _animator.SetBool("IsGrounded", IsGrounded());
         _animator.SetFloat("FallSpeed", _rb.velocity.y);
+    }
+
+    private IEnumerator FootstepsUpdate()
+    {
+        if (_horizontalInput != 0 || _verticalInput != 0)
+        {
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, 2))
+            {
+                _audioSource.pitch = Random.Range(0.8f, 1.2f);
+
+                if (hit.collider.tag == _metalTag)
+                    _audioSource.PlayOneShot(_metalFootsteps[Random.Range(0, _metalFootsteps.Length)]);
+                else
+                    _audioSource.PlayOneShot(_standartFootsteps[Random.Range(0, _standartFootsteps.Length)]);
+            }
+
+            _isStepReload = false;
+
+            yield return _cachedStepsDelay;
+
+            _isStepReload = true;
+        }
     }
 }
