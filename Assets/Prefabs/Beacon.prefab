@@ -1586,7 +1586,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5709878367446435745}
-  - component: {fileID: 341826594131596692}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -1610,20 +1609,6 @@ Transform:
   - {fileID: 6078003122578259452}
   m_Father: {fileID: 8009086142058901867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &341826594131596692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2642468632855591857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8ea00138ebe64f43968c669a81b7aca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RotationSpeed: 1
-  _rotateAroundObject: {fileID: 6078003122578259452}
 --- !u!1 &2763427921975381623
 GameObject:
   m_ObjectHideFlags: 0
