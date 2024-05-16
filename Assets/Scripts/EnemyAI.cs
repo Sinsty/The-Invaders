@@ -29,8 +29,6 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _enemyTriggerRadius = 25;
     [Header("State settings")]
     [SerializeField] private float _viewAngle = 90;
-    [SerializeField] private float _multiplySearchSensWhileHolding = 1f;
-    [SerializeField] private float _multiplySearchSensWhileResearching = 1f;
     [SerializeField] private float _holdingTime = 10;
     [SerializeField] private float _chahsingSpeed = 7;
     [SerializeField] private float _patrolSpeed = 5;
@@ -73,7 +71,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (State == EnemyStates.patroling)
             {
-                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, true, 0.9f);
+                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, EnemyStates.researching, 0.9f);
             }
         }
     }
@@ -175,7 +173,6 @@ public class EnemyAI : MonoBehaviour
 
             _navMeshAgent.speed = velocity;
             _navMeshAgent.SetDestination(_player.transform.position);
-            print("Researching " + _navMeshAgent.destination);
         }
     }
 
@@ -326,41 +323,21 @@ public class EnemyAI : MonoBehaviour
             EnemyAI enemyAI;
             if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
             {
-                if (enemyAI != this && enemyAI.State != firstState && enemyAI.State != EnemyStates.researching)
-                {
-                    if (enemyAI.State != firstState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
-                    {
-                        enemyAI.State = firstState;
-                    }
-                    else
-                    {
-                        enemyAI.State = secondState;
-                    }
-                    enemyAI.SwitchStatesUpdate();
-                }
-            }
-        }
-    }
-
-    private void SwitchStateAllEnemyInRadius(float radius, EnemyStates firstState, bool secondResearch, float chance)
-    {
-        var objects = Physics.SphereCastAll(transform.position, radius, Vector3.up);
-
-        foreach (var obj in objects)
-        {
-            EnemyAI enemyAI;
-            if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
-            {
-                if (enemyAI != this && enemyAI.State != firstState && enemyAI.State != EnemyStates.researching)
+                if (enemyAI != this && enemyAI.State == EnemyStates.patroling)
                 {
                     if (UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
                     {
                         enemyAI.State = firstState;
                     }
-                    else if (secondResearch)
+                    else if (secondState == EnemyStates.researching)
                     {
                         enemyAI.StartResearch(true);
                     }
+                    else
+                    {
+                        enemyAI.State = secondState;
+                    }
+
                     enemyAI.SwitchStatesUpdate();
                 }
             }

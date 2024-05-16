@@ -1289,19 +1289,17 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _maxShootTriggerDistance: 100
-  _maxShootingDistance: 30
-  _maxChasingDistance: 50
+  _maxShootingDistance: 50
+  _maxChasingDistance: 65
   _enemyTriggerRadius: 75
   _viewAngle: 120
-  _multiplySearchSensWhileHolding: 1
-  _multiplySearchSensWhileResearching: 1
   _holdingTime: 10
   _chahsingSpeed: 6
   _patrolSpeed: 3
   _muzzleFlash: {fileID: 5680886012220675531}
   _rotatingToTargetSpeed: 1
   _fireRate: 5
-  _damage: 5
+  _damage: 2.5
   _hitChanse: 0.7
   _animator: {fileID: 3197444916994003068}
 --- !u!114 &3400777700171073655
@@ -1316,7 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d1a973d2363df4c9e0fecf72269e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 100
+  _health: 125
   _enemyAI: {fileID: 5071120785793730918}
 --- !u!1 &4327961910585390947
 GameObject:
