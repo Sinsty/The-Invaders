@@ -33,7 +33,7 @@ public class CameraRotation : MonoBehaviour
 
         float xRotationInput = -Input.GetAxis("Mouse Y") * _xSens;
         _neededXRotationInput -= Input.GetAxis("Mouse Y") * _xSens;
-        _neededXRotationInput = Mathf.Clamp(_neededXRotationInput, -50, 50);
+        _neededXRotationInput = Mathf.Clamp(_neededXRotationInput, -75, 75);
 
         _xRotation = _neededXRotationInput - xRotationInput;
         _xRotation = Mathf.Clamp(_xRotation, -50, 50);

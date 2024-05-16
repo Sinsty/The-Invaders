@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditorInternal.VersionControl.ListControl;
 
 [RequireComponent(typeof(NavMeshAgent))]
 
@@ -66,17 +67,11 @@ public class EnemyAI : MonoBehaviour
     {
         float maxHearDistance = _maxShootTriggerDistance;
 
-        if (State == EnemyStates.holding)
-            maxHearDistance *= _multiplySearchSensWhileHolding;
-        else if (State == EnemyStates.researching)
-            maxHearDistance *= _multiplySearchSensWhileResearching;
-
         float distance = Vector3.Distance(transform.position, hotPoint);
 
         if (distance < maxHearDistance)
         {
-            print("HeardShots");
-            if (State != EnemyStates.holding && State != EnemyStates.researching)
+            if (State == EnemyStates.patroling)
             {
                 SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, true, 0.9f);
             }
@@ -89,7 +84,10 @@ public class EnemyAI : MonoBehaviour
         {
             if (IsCanShooting()) // if player was noticed all enemyes will hold positions
             {
-                SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, 1);
+                if (State != EnemyStates.shooting)
+                {
+                    //SwitchStateAllEnemyInRadius(_enemyTriggerRadius, EnemyStates.holding, 1);
+                }
 
                 State = EnemyStates.shooting;
             }
@@ -141,22 +139,18 @@ public class EnemyAI : MonoBehaviour
         switch (State)
         {
             case EnemyStates.patroling:
-                //Debug.Log("Patroling");
                 PatrolUpdate();
                 break;
 
             case EnemyStates.holding:
-                //Debug.Log("Holding");
                 HoldUpdate();
                 break;
 
             case EnemyStates.shooting:
-                //Debug.Log("Shooting");
                 ShootUpdate();
                 break;
 
             case EnemyStates.chasing:
-                //Debug.Log("Chasing");
                 ChaseUpdate();
                 break;
         }
@@ -169,17 +163,20 @@ public class EnemyAI : MonoBehaviour
 
     public void StartResearch(bool IsRunWhenResearching)
     {
-        State = EnemyStates.researching;
-
-        float velocity = _patrolSpeed;
-        if (IsRunWhenResearching)
+        if (State != EnemyStates.researching && State != EnemyStates.chasing && State != EnemyStates.shooting)
         {
-            velocity = _chahsingSpeed;
-        }
+            State = EnemyStates.researching;
 
-        _navMeshAgent.speed = velocity;
-        _navMeshAgent.SetDestination(_player.transform.position);
-        print("Researching " + _navMeshAgent.destination);
+            float velocity = _patrolSpeed;
+            if (IsRunWhenResearching)
+            {
+                velocity = _chahsingSpeed;
+            }
+
+            _navMeshAgent.speed = velocity;
+            _navMeshAgent.SetDestination(_player.transform.position);
+            print("Researching " + _navMeshAgent.destination);
+        }
     }
 
     public void StartResearch(Vector3 point, bool IsRunWhenResearching)
@@ -234,7 +231,6 @@ public class EnemyAI : MonoBehaviour
 
     private void Shoot()
     {
-        print("EnemyShoot");
         if (Time.time >= _nextTimeToFire)
         {
             _muzzleFlash.Play();
@@ -258,22 +254,12 @@ public class EnemyAI : MonoBehaviour
 
     private bool IsCanChasing()
     {
-        if (State == EnemyStates.holding)
-            return IsCanSeePlayer(_viewAngle, _maxChasingDistance * _multiplySearchSensWhileHolding);
-        else if (State == EnemyStates.researching)
-            return IsCanSeePlayer(_viewAngle, _maxChasingDistance * _multiplySearchSensWhileResearching);
-        else
-            return IsCanSeePlayer(_viewAngle, _maxChasingDistance);
+        return IsCanSeePlayer(_viewAngle, _maxChasingDistance);
     }
 
     private bool IsCanShooting()
     {
-        if (State == EnemyStates.holding)
-            return IsCanSeePlayer(_viewAngle, _maxShootingDistance * _multiplySearchSensWhileHolding);
-        else if (State == EnemyStates.researching)
-            return IsCanSeePlayer(_viewAngle, _maxShootingDistance * _multiplySearchSensWhileResearching);
-        else
-            return IsCanSeePlayer(_viewAngle, _maxShootingDistance);
+        return IsCanSeePlayer(_viewAngle, _maxShootingDistance);
     }
 
     private bool IsCanSeePlayer(float viewAngle, float maxDistanceToSee)
@@ -319,10 +305,13 @@ public class EnemyAI : MonoBehaviour
             EnemyAI enemyAI;
             if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
             {
-                if (enemyAI.State != newState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                if (enemyAI != this && enemyAI.State != EnemyStates.researching)
                 {
-                    enemyAI.State = newState;
-                    enemyAI.SwitchStatesUpdate();
+                    if (enemyAI.State != newState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                    {
+                        enemyAI.State = newState;
+                        enemyAI.SwitchStatesUpdate();
+                    }
                 }
             }
         }
@@ -337,15 +326,18 @@ public class EnemyAI : MonoBehaviour
             EnemyAI enemyAI;
             if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
             {
-                if (enemyAI.State != firstState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                if (enemyAI != this && enemyAI.State != firstState && enemyAI.State != EnemyStates.researching)
                 {
-                    enemyAI.State = firstState;
+                    if (enemyAI.State != firstState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                    {
+                        enemyAI.State = firstState;
+                    }
+                    else
+                    {
+                        enemyAI.State = secondState;
+                    }
+                    enemyAI.SwitchStatesUpdate();
                 }
-                else
-                {
-                    enemyAI.State = secondState;
-                }
-                enemyAI.SwitchStatesUpdate();
             }
         }
     }
@@ -359,15 +351,18 @@ public class EnemyAI : MonoBehaviour
             EnemyAI enemyAI;
             if (obj.collider.gameObject.TryGetComponent<EnemyAI>(out enemyAI))
             {
-                if (enemyAI.State != firstState && enemyAI.State != EnemyStates.researching && UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                if (enemyAI != this && enemyAI.State != firstState && enemyAI.State != EnemyStates.researching)
                 {
-                    enemyAI.State = firstState;
+                    if (UnityEngine.Random.Range(0, (int)(1 / chance)) == 0)
+                    {
+                        enemyAI.State = firstState;
+                    }
+                    else if (secondResearch)
+                    {
+                        enemyAI.StartResearch(true);
+                    }
+                    enemyAI.SwitchStatesUpdate();
                 }
-                else if (secondResearch)
-                {
-                    enemyAI.StartResearch(true);
-                }
-                enemyAI.SwitchStatesUpdate();
             }
         }
     }

@@ -1291,7 +1291,7 @@ MonoBehaviour:
   _maxShootTriggerDistance: 100
   _maxShootingDistance: 30
   _maxChasingDistance: 50
-  _enemyTriggerRadius: 35
+  _enemyTriggerRadius: 75
   _viewAngle: 120
   _multiplySearchSensWhileHolding: 1
   _multiplySearchSensWhileResearching: 1
@@ -1302,7 +1302,7 @@ MonoBehaviour:
   _rotatingToTargetSpeed: 1
   _fireRate: 5
   _damage: 5
-  _hitChanse: 0.18
+  _hitChanse: 0.7
   _animator: {fileID: 3197444916994003068}
 --- !u!114 &3400777700171073655
 MonoBehaviour:
