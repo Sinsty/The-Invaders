@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
+    public GameObject gameplayUI;
+    public GameObject gameOverScreen;
+    
     public float Health { get; private set; }
 
     [SerializeField] private float _maxHealth = 100;
@@ -30,13 +33,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (Health <= 0)
         {
-            Death();
+            gameplayUI.SetActive(false);
+            gameOverScreen.SetActive(true);
         }
-    }
-
-    private void Death()
-    {
-        Destroy(gameObject);
     }
 
     private void UpdateHealthBar()
