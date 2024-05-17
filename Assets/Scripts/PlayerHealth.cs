@@ -5,6 +5,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public GameObject gameplayUI;
     public GameObject gameOverScreen;
+    public GameObject PauseGam;
 
     public float Health { get; private set; }
 
@@ -42,11 +43,13 @@ public class PlayerHealth : MonoBehaviour
         if (Health <= 0)
         {
             gameplayUI.SetActive(false);
+            PauseGam.SetActive(false);
             gameOverScreen.SetActive(true);
             GetComponent<PlayerController>().enabled = false;
             GetComponent<CameraRotation>().enabled = false;
             GetComponent<WeaponSwitch>().enabled = false;
             GetComponent<Aiming>().enabled = false;
+            GetComponent<Gun>().enabled = false;
         }
     }
 

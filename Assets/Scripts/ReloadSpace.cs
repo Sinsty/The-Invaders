@@ -12,6 +12,4 @@ public class ReloadSpace : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
      }
    }
-
-
 }
