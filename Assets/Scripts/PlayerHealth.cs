@@ -43,6 +43,10 @@ public class PlayerHealth : MonoBehaviour
         {
             gameplayUI.SetActive(false);
             gameOverScreen.SetActive(true);
+            GetComponent<PlayerController>().enabled = false;
+            GetComponent<CameraRotation>().enabled = false;
+            GetComponent<WeaponSwitch>().enabled = false;
+            GetComponent<Aiming>().enabled = false;
         }
     }
 

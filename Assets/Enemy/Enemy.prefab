@@ -1300,7 +1300,7 @@ MonoBehaviour:
   _rotatingToTargetSpeed: 1
   _fireRate: 5
   _damage: 2.5
-  _hitChanse: 0.7
+  _hitChanse: 0.66
   _animator: {fileID: 3197444916994003068}
 --- !u!114 &3400777700171073655
 MonoBehaviour:

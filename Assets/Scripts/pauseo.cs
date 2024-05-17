@@ -30,7 +30,7 @@ public class pauseo : MonoBehaviour
         {
             Pause();
         }
-     }
+      }
    }
    
    public void Resume()
