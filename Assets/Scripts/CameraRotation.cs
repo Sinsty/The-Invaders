@@ -13,32 +13,38 @@ public class CameraRotation : MonoBehaviour
     private float _xRotation;
     private float _yRotation;
 
-    private void Awake()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void LateUpdate()
     {
-        Rotating();
+        Rotating(Inputs());
         Stabilize();
     }
 
-    private void Rotating()
+    private Vector2 Inputs()
     {
-        float yRotationInput = Input.GetAxis("Mouse X") * _ySens;
-        _yRotation += yRotationInput;
+        if (PauseGame.isPaused)
+            return Vector2.zero;
 
-        transform.Rotate(Vector3.up * yRotationInput, Space.World);
+        return new Vector2(-Input.GetAxis("Mouse Y") * _xSens, Input.GetAxis("Mouse X") * _ySens);
+    }
 
-        float xRotationInput = -Input.GetAxis("Mouse Y") * _xSens;
-        _neededXRotationInput -= Input.GetAxis("Mouse Y") * _xSens;
+    private void Rotating(Vector2 inputs)
+    {
+        _yRotation += inputs.y;
+
+        transform.Rotate(Vector3.up * inputs.y, Space.World);
+
+        _neededXRotationInput += inputs.x;
         _neededXRotationInput = Mathf.Clamp(_neededXRotationInput, -75, 75);
 
-        _xRotation = _neededXRotationInput - xRotationInput;
+        _xRotation = _neededXRotationInput - inputs.x;
         _xRotation = Mathf.Clamp(_xRotation, -50, 50);
 
-        _spine.transform.Rotate(transform.right * _xRotation + Vector3.up * yRotationInput, Space.World);
+        _spine.transform.Rotate(transform.right * _xRotation + Vector3.up * inputs.y, Space.World);
 
     }
 

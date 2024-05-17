@@ -356,5 +356,4 @@ public class EnemyAI : MonoBehaviour
     {
         Gun.OnHit.RemoveListener(HeardShots);
     }
-
 }

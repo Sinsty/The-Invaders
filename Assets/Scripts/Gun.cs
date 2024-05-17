@@ -56,6 +56,9 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
+        if (PauseGame.isPaused) 
+            return;
+
         ShootUpdate();
         UpdateOverheatBar();
     }

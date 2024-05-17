@@ -8,6 +8,9 @@ public class BeaconRotation : MonoBehaviour
 
     void Update()
     {
+        if (PauseGame.isPaused)
+            return;
+
         Rotator();
     }
 

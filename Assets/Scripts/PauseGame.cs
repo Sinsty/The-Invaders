@@ -1,56 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseGame : MonoBehaviour
 {
-   public static bool isPaused = false;
-   public GameObject pauseMenuUI;
+    public static bool isPaused { get; private set; }
+    public GameObject pauseMenuUI;
+    [SerializeField] private CameraRotation _cameraRotation;
 
-   void Start()
-   {
-      Cursor.lockState = CursorLockMode.Locked;
-   }
+    void Start()
+    {
+        Time.timeScale = 1f;
+    }
 
-   void Update()
-   {
-     if (isPaused)
-     {
-        Cursor.lockState = CursorLockMode.None;
-     }
-     else Cursor.lockState = CursorLockMode.Locked;
-     if (Input.GetKeyDown(KeyCode.Escape))
-     {
-        if(isPaused)
+    void Update()
+    {
+        if (isPaused)
         {
-            Resume();
+            Cursor.lockState = CursorLockMode.None;
         }
-        else
+        else 
+            Cursor.lockState = CursorLockMode.Locked;
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Pause();
+            if (isPaused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
         }
-      }
-   }
-   
-   public void Resume()
-   {
-    pauseMenuUI.SetActive(false);
-    Time.timeScale = 1f;
-    isPaused = false;
-   }
+    }
 
-   public void Pause()
-   {
-    pauseMenuUI.SetActive(true);
-    Time.timeScale = 0f;
-    isPaused = true;
-   }
+    public void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+    }
 
-   public void ResumeButton()
-   {
-      pauseMenuUI.SetActive(false);
-      Time.timeScale = 1f;
-      isPaused = false;
-   }
+    public void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+    }
+
+    public void ResumeButton()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+    }
 }

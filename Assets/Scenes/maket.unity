@@ -4425,6 +4425,18 @@ PrefabInstance:
       propertyPath: _coolingDownSound
       value: 
       objectReference: {fileID: 8300000, guid: 00e030e754781054ca310eac530c8db4, type: 3}
+    - target: {fileID: 3360260103578099328, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: m_UpdateMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360260103578099328, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360260103578099328, guid: d08d422f435343547803f5eb58fda311, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3576117706717420161, guid: d08d422f435343547803f5eb58fda311, type: 3}
       propertyPath: m_Volume
       value: 0.3
@@ -5498,6 +5510,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d59a6aea847155f45b16f2fe8aeacd79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &229180929 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2551894521444814099, guid: d08d422f435343547803f5eb58fda311, type: 3}
+  m_PrefabInstance: {fileID: 175934210}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcb1750d29918e40a0b166ab6369aca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &229180931 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 724432234875603918, guid: d08d422f435343547803f5eb58fda311, type: 3}
+  m_PrefabInstance: {fileID: 175934210}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edbf4c628931a534fb0c564cc8254b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &229498330
@@ -40812,6 +40846,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 1089347724}
+  _cameraRotation: {fileID: 229180931}
+  _aiming: {fileID: 229180929}
 --- !u!4 &1156435031
 Transform:
   m_ObjectHideFlags: 0
