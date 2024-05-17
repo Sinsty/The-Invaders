@@ -12,4 +12,8 @@ public class GameManager : MonoBehaviour
     public void StartGame(){
         SceneManager.LoadScene("maket");
     }
+
+    public void Exit(){
+        SceneManager.LoadScene("menu");
+    }
 }
