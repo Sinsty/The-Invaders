@@ -26,6 +26,7 @@ public class Gun : MonoBehaviour
     [SerializeField] private float _overheatIncreaseSpeed = 0.07f;
     [SerializeField] private float _overheatDecreaseSpeed = 0.7f;
     [SerializeField] private float _coolingDownSpeed = 0.3f;
+    [SerializeField] private AudioClip _coolingDownSound;
 
     private bool _isCoolingDown = false;
 
@@ -65,6 +66,7 @@ public class Gun : MonoBehaviour
         {
             _isCoolingDown = true;
             _overheatWarningText.SetActive(true);
+            _audioSource.PlayOneShot(_coolingDownSound);
         }
         else if (OverheatLevel <= 0)
         {
