@@ -5,11 +5,15 @@ public class PlayerHealth : MonoBehaviour
 {
     public GameObject gameplayUI;
     public GameObject gameOverScreen;
-    
+
     public float Health { get; private set; }
+
 
     [SerializeField] private float _maxHealth = 100;
     [SerializeField] private Image _hpBar;
+    [SerializeField] private AudioClip _damageTakeAudio;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private Animator _damageTakeAnimator;
 
     private float _hpBarFillAmmount;
 
@@ -28,6 +32,10 @@ public class PlayerHealth : MonoBehaviour
     {
         damage = Mathf.Abs(damage);
         Health -= damage;
+
+        _audioSource.pitch = Random.Range(0.8f, 1.2f);
+        _audioSource.PlayOneShot(_damageTakeAudio);
+        _damageTakeAnimator.SetTrigger("DamageTake");
 
         UpdateHealthBar();
 

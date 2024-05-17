@@ -81,7 +81,6 @@ public class Gun : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.Mouse0) == false)
             {
-                print("decrease");
                 OverheatLevel -= _overheatDecreaseSpeed * Time.deltaTime;
             }
         }
