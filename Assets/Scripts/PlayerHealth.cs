@@ -3,18 +3,19 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public GameObject gameplayUI;
-    public GameObject gameOverScreen;
-    public GameObject PauseGam;
-
     public float Health { get; private set; }
 
 
     [SerializeField] private float _maxHealth = 100;
     [SerializeField] private Image _hpBar;
+    [Header("Damage Effects")]
     [SerializeField] private AudioClip _damageTakeAudio;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private Animator _damageTakeAnimator;
+    [Header("UI")]
+    [SerializeField] private GameObject gameplayUI;
+    [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private GameObject GamePause;
 
     private float _hpBarFillAmmount;
 
@@ -42,15 +43,21 @@ public class PlayerHealth : MonoBehaviour
 
         if (Health <= 0)
         {
-            gameplayUI.SetActive(false);
-            PauseGam.SetActive(false);
-            gameOverScreen.SetActive(true);
-            GetComponent<PlayerController>().enabled = false;
-            GetComponent<CameraRotation>().enabled = false;
-            GetComponent<WeaponSwitch>().enabled = false;
-            GetComponent<Aiming>().enabled = false;
-            GetComponent<Gun>().enabled = false;
+            Death();
         }
+    }
+
+    private void Death()
+    {
+        gameplayUI.SetActive(false);
+        GamePause.SetActive(false);
+        gameOverScreen.SetActive(true);
+
+        GetComponent<PlayerController>().enabled = false;
+        GetComponent<CameraRotation>().enabled = false;
+        GetComponent<WeaponSwitch>().enabled = false;
+        GetComponent<Aiming>().enabled = false;
+        GetComponent<Gun>().enabled = false;
     }
 
     private void UpdateHealthBar()

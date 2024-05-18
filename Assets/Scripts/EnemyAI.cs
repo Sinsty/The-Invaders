@@ -17,6 +17,7 @@ public class EnemyAI : MonoBehaviour
 
     public EnemyStates State { get; private set; }
 
+    [SerializeField] private float _enemyNotificationCD = 3f;
     [Header("Targets")]
     [SerializeField] private PlayerHealth _player;
     [SerializeField] private Transform _holdingPoint;
@@ -39,6 +40,8 @@ public class EnemyAI : MonoBehaviour
     [SerializeField, Range(0, 1)] private float _hitChanse = 1;
     [Header("Animations")]
     [SerializeField] private Animator _animator;
+
+    private static float _enemyNotificationCDtimer = 0;
 
     private float _timer;
     private float _nextTimeToFire;
@@ -250,12 +253,18 @@ public class EnemyAI : MonoBehaviour
 
     private bool IsCanChasing()
     {
-        return IsCanSeePlayer(_viewAngle, _maxChasingDistance);
+        if (_player.Health > 0)
+            return IsCanSeePlayer(_viewAngle, _maxChasingDistance);
+        else
+            return false;
     }
 
     private bool IsCanShooting()
     {
-        return IsCanSeePlayer(_viewAngle, _maxShootingDistance);
+        if (_player.Health > 0)
+            return IsCanSeePlayer(_viewAngle, _maxShootingDistance);
+        else
+            return false;
     }
 
     private bool IsCanSeePlayer(float viewAngle, float maxDistanceToSee)
@@ -294,6 +303,9 @@ public class EnemyAI : MonoBehaviour
 
     private void SwitchStateAllEnemyInRadius(float radius, EnemyStates newState, float chance)
     {
+        if (Time.time > _enemyNotificationCDtimer) 
+            return;
+
         var objects = Physics.SphereCastAll(transform.position, radius, Vector3.up);
 
         foreach (var obj in objects)
@@ -311,10 +323,15 @@ public class EnemyAI : MonoBehaviour
                 }
             }
         }
+
+        _enemyNotificationCDtimer = Time.time + _enemyNotificationCD;
     }
 
     private void SwitchStateAllEnemyInRadius(float radius, EnemyStates firstState, EnemyStates secondState, float chance)
     {
+        if (Time.time > _enemyNotificationCDtimer)
+            return;
+
         var objects = Physics.SphereCastAll(transform.position, radius, Vector3.up);
 
         foreach (var obj in objects)
@@ -341,6 +358,8 @@ public class EnemyAI : MonoBehaviour
                 }
             }
         }
+
+        _enemyNotificationCDtimer = Time.time + _enemyNotificationCD;
     }
 
     #endregion SwitchStateAllEnemyInRadius
