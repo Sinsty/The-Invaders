@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Disable : MonoBehaviour
 {
+    public Camera BTRñamera;
     public MonoBehaviour script1;
     public MonoBehaviour script2;
 
@@ -18,6 +19,11 @@ public class Disable : MonoBehaviour
         {
             script2.enabled = false;
         }
+
+        if (BTRñamera != null)
+        {
+            BTRñamera.gameObject.SetActive(false);
+        }
     }
 
     void OnEnable()
@@ -31,6 +37,11 @@ public class Disable : MonoBehaviour
         {
             script2.enabled = false;
         }
+
+        if (BTRñamera != null)
+        {
+            BTRñamera.gameObject.SetActive(false);
+        }
     }
 
     void OnDisable()
@@ -43,6 +54,11 @@ public class Disable : MonoBehaviour
         if (script2 != null)
         {
             script2.enabled = true;
+        }
+
+        if (BTRñamera != null)
+        {
+            BTRñamera.gameObject.SetActive(true);
         }
     }
 }

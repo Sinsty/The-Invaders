@@ -4163,6 +4163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cafe43112e5882419258029d3dcdc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  "BTR\u0441amera": {fileID: 7160144897353625311}
   script1: {fileID: 7999212142010016988}
   script2: {fileID: 5365796199707778289}
 --- !u!1 &8920945457084620150
