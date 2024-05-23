@@ -10,9 +10,7 @@ public class PlayerHealth : MonoBehaviour
         private set { _health = SetHealth(value); }
     }
 
-
-
-    [SerializeField] private float _maxHealth = 100;
+    [field: SerializeField] public float MaxHealth { get; private set; } = 100;
     [SerializeField] private float _timeToStartHealing = 10;
     [SerializeField] private float _healingSpeed;
     [Header("Damage Effects")]
@@ -24,6 +22,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject gameplayUI;
     [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private GameObject GamePause;
+    [Header("Death")]
+    [SerializeField] private Animator _characterAnimator;
 
     private float _timerToHealing = 10;
 
@@ -31,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
-        Health = _maxHealth;
+        Health = MaxHealth;
         UpdateHealthBar();
     }
 
@@ -82,17 +82,21 @@ public class PlayerHealth : MonoBehaviour
         GetComponent<CameraRotation>().enabled = false;
         GetComponent<WeaponSwitch>().enabled = false;
         GetComponent<Aiming>().enabled = false;
-        GetComponent<Gun>().enabled = false;
+
+        enabled = false;
+
+        _characterAnimator.SetBool("IsGrounded", true);
+        _characterAnimator.SetBool("IsDead", true);
     }
 
     private void UpdateHealthBar()
     {
-        _hpBarFillAmmount = Health / _maxHealth;
+        _hpBarFillAmmount = Health / MaxHealth;
     }
 
     private float SetHealth(float value)
     {
-        value = Mathf.Clamp(value, 0, _maxHealth);
+        value = Mathf.Clamp(value, 0, MaxHealth);
         return value;
     }
 }

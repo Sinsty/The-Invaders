@@ -1281,6 +1281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1e529963d309142b70aae7b3f2c246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyNotificationCD: 3
   _player: {fileID: 0}
   _holdingPoint: {fileID: 0}
   _patrolPoints:
@@ -1289,7 +1290,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _maxShootTriggerDistance: 100
-  _maxShootingDistance: 50
+  _maxShootingDistance: 42.5
   _maxChasingDistance: 65
   _enemyTriggerRadius: 75
   _viewAngle: 120
@@ -1314,8 +1315,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d1a973d2363df4c9e0fecf72269e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 125
+  _health: 100
   _enemyAI: {fileID: 5071120785793730918}
+  _navMeshAgent: {fileID: 4278918920041646333}
+  _animator: {fileID: 3197444916994003068}
 --- !u!1 &4327961910585390947
 GameObject:
   m_ObjectHideFlags: 0

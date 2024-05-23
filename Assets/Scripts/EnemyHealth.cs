@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private float _health = 100;
     [SerializeField] private EnemyAI _enemyAI;
+    [SerializeField] private NavMeshAgent _navMeshAgent;
+    [SerializeField] private Animator _animator;
 
     public void DealDamage(float damage)
     {
@@ -17,7 +20,9 @@ public class EnemyHealth : MonoBehaviour
 
     private void Death()
     {
-        Debug.Log("Death");
-        Destroy(gameObject);
+        _navMeshAgent.enabled = false;
+        _enemyAI.enabled = false;
+        _animator.SetTrigger("Death");
+        Destroy(gameObject, 10);
     }
 }
