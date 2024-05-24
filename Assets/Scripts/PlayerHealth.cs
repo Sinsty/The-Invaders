@@ -24,6 +24,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject GamePause;
     [Header("Death")]
     [SerializeField] private Animator _characterAnimator;
+    public GameObject PauseGame2;
 
     private float _timerToHealing = 10;
 
@@ -64,6 +65,7 @@ public class PlayerHealth : MonoBehaviour
         _audioSource.PlayOneShot(_damageTakeAudio);
         _damageTakeAnimator.SetTrigger("DamageTake");
 
+        PauseGame1();
         UpdateHealthBar();
 
         if (Health <= 0)
@@ -98,5 +100,10 @@ public class PlayerHealth : MonoBehaviour
     {
         value = Mathf.Clamp(value, 0, MaxHealth);
         return value;
+    }
+
+    public void PauseGame1()
+    {
+       PauseGame2.SetActive(true);
     }
 }

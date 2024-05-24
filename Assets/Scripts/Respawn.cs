@@ -9,6 +9,7 @@ public class Respawn : MonoBehaviour
     [SerializeField] private Animator _characterAnimator;
     [SerializeField] private GameObject _deathScreen;
     [SerializeField] private GameObject _hud;
+    public GameObject PauseGame2;
 
     private void Start()
     {
@@ -45,7 +46,9 @@ public class Respawn : MonoBehaviour
 
         _deathScreen.SetActive(false);
         _hud.SetActive(true);
+        PauseGame2.SetActive(true);
 
         _player.transform.position = PlayerRespawnPosition;
     }
+
 }
